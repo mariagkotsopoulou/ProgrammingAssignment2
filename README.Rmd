@@ -1,0 +1,58 @@
+
+## R Programming Programming Assignment 2: Lexical Scoping
+
+
+### Caching the Inverse of a Matrix
+
+Matrix inversion is usually a costly computation. 
+If the contents of the matrix are not changing, it may make sense
+to cache the value of the inverse so that when we need it again, it
+can be looked up in the cache rather than recomputed. 
+This is achieved by taking advantage of the scoping rules of
+the R language and how they can be manipulated to preserve state inside
+of an R object.
+
+In the file cachematrix.R two functions are found 
+
+####1.`makeCacheMatrix`: 
+This function returns a list containing functions that perform the following:
+sets and gets the value of the matrix as well as sets and gets the inverse of the matrix.
+
+####2.`cacheSolve`: 
+This function computes the inverse of the special "matrix" returned by makeCacheMatrix above. 
+If the inverse has already been calculated (and the matrix has not changed), 
+then it retrieves the inverse from the cache.
+
+
+
+### Sample Run
+
+Below you can find a sample run of the functions.
+The second time that the function is execued we expect the message getting cached data to be printed out
+indicating that the inverse is retrieved from the cache. 
+Moreover, the execution time for the second time should be smaller than the first time. 
+
+
+```{r,eval=FALSE ,echo = TRUE, warning = FALSE, message = FALSE}
+
+set.seed(237)
+
+r <- rnorm(1000000)
+
+mat <- matrix(r, nrow=1000, ncol=1000)
+
+invmat <- makeCacheMatrix(mat)
+
+system.time(cacheSolve(invmat)); system.time(cacheSolve(invmat))  
+
+#    user  system elapsed 
+#    0.86    0.00    0.86 
+# getting cached data
+#    user  system elapsed 
+#       0       0       0 
+      
+```
+
+Aditionally, a function to test the correct functioning of the function is provided
+in a separate file testinversematrixcache.R. In that function the microbenchmark function 
+from the microbenchmark package is used to get a more accurate measurement. 
